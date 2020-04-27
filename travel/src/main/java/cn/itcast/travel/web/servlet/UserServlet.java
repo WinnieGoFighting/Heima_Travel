@@ -42,10 +42,11 @@ public class UserServlet extends BaseServlet {
             info.setFlag(false);
             info.setErrorMsg("验证码错误");
             //info转换为json响应回去
-            ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(info);
-            response.setContentType("application/json;charset=utf-8");
-            response.getWriter().write(json);
+//            ObjectMapper mapper = new ObjectMapper();
+//            String json = mapper.writeValueAsString(info);
+//            response.setContentType("application/json;charset=utf-8");
+//            response.getWriter().write(json);
+            writeValue(info,response);
             return;
         }
         //1. 获取数据
@@ -74,11 +75,11 @@ public class UserServlet extends BaseServlet {
             info.setErrorMsg("注册失败！");
         }
         //4. 响应结果：将info对象序列化为json
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(info);
-
-        response.setContentType("application/json;charset=utf-8");
-        response.getWriter().write(json);
+//        ObjectMapper mapper = new ObjectMapper();
+//        String json = mapper.writeValueAsString(info);
+//        response.setContentType("application/json;charset=utf-8");
+//        response.getWriter().write(json);
+        writeValue(info,response);
     }
 
     /**
@@ -156,9 +157,10 @@ public class UserServlet extends BaseServlet {
             }
         }
         //响应数据
-        ObjectMapper mapper = new ObjectMapper();
-        response.setContentType("application/json;charset=utf-8");
-        mapper.writeValue(response.getOutputStream(),info);
+//        ObjectMapper mapper = new ObjectMapper();
+//        response.setContentType("application/json;charset=utf-8");
+//        mapper.writeValue(response.getOutputStream(),info);
+        writeValue(info,response);
     }
 
     /**
@@ -170,9 +172,10 @@ public class UserServlet extends BaseServlet {
      */
     public void find(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User u = (User)request.getSession().getAttribute("user");
-        ObjectMapper mapper = new ObjectMapper();
-        response.setContentType("application/json;charset=utf-8");
-        mapper.writeValue(response.getOutputStream(),u);
+//        ObjectMapper mapper = new ObjectMapper();
+//        response.setContentType("application/json;charset=utf-8");
+//        mapper.writeValue(response.getOutputStream(),u);
+        writeValue(u,response);
 
     }
 
