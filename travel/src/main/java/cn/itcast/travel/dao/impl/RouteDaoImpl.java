@@ -6,6 +6,7 @@ import cn.itcast.travel.util.JDBCUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RouteDaoImpl implements RouteDao {
@@ -16,9 +17,22 @@ public class RouteDaoImpl implements RouteDao {
      * @return
      */
     @Override
-    public int findTotalCount(int cid) {
-        String sql = "select count(*) from tab_route where cid = ?";
-        return template.queryForObject(sql,Integer.class,cid);
+    public int findTotalCount(int cid,String rname) {
+        //两个参数可以存在可以不存在！多条件的组合查询->拼接sql
+        String sql = "select count(*) from tab_route where 1=1 ";
+        StringBuilder sb = new StringBuilder(sql);
+        List<Object> params = new ArrayList<>();
+        //判断参数是否有值
+        if (cid!=0) {
+            sb.append("and cid=? ");
+            params.add(cid);
+        }
+        if (rname != null && rname.length() != 0) {
+            sb.append("and rname like ?");
+            params.add("%"+rname+"%");
+        }
+        sql = sb.toString();
+        return template.queryForObject(sql,Integer.class,params.toArray());
     }
 
     /**
@@ -29,8 +43,33 @@ public class RouteDaoImpl implements RouteDao {
      * @return
      */
     @Override
-    public List<Route> findByPage(int cid, int start, int pageSize) {
-        String sql = "select * from tab_route where cid=? limit ?,?";
-        return template.query(sql, new BeanPropertyRowMapper<Route>(Route.class),cid,start,pageSize);
+    public List<Route> findByPage(int cid, int start, int pageSize,String rname) {
+        String sql = "select * from tab_route where 1=1 ";
+        StringBuilder sb = new StringBuilder(sql);
+        List<Object> params = new ArrayList<>();
+        if (cid!=0) {
+            sb.append("and cid=? ");
+            params.add(cid);
+        }
+        if (rname != null && rname.length() != 0) {
+            sb.append("and rname like ? ");
+            params.add("%"+rname+"%");
+        }
+        sb.append("limit ?,? ");
+        sql=sb.toString();
+        params.add(start);
+        params.add(pageSize);
+        return template.query(sql, new BeanPropertyRowMapper<Route>(Route.class),params.toArray());
+    }
+
+    /**
+     * 根据id查询tab_route中的信息并封装到route类
+     * @param rid
+     * @return
+     */
+    @Override
+    public Route findById(int rid) {
+        String sql = "select * from tab_route where rid = ?";
+        return template.queryForObject(sql,new BeanPropertyRowMapper<Route>(Route.class),rid);
     }
 }

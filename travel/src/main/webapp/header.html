@@ -1,5 +1,6 @@
 <!-- 头部 start -->
-    <script>
+<script src="js/getParameter.js"></script>
+<script>
         $(function() {
             //发送ajax请求，从session中得到数据
             $.get("user/find",{},function(data){
@@ -30,53 +31,61 @@
                 //将lis的字符串设置到ul的html内容中
                 $("#category").html(lis);
             });
+            //给搜索按钮绑定单击事件，获取搜索输入框的内容，并且在url后面拼接内容
+            $("#search_button").click(function(){
+                var rname = $("#search_input").val();
+                var cid = getParameter("cid");
+
+                //跳转路径，路径为拼接上的url
+                location.href="route_list.html?cid="+cid+"&rname="+rname;
+            })
 
         });
-    </script>
-    <header id="header">
-        <div class="top_banner">
-            <img src="images/top_banner.jpg" alt="">
+</script>
+<header id="header">
+    <div class="top_banner">
+        <img src="images/top_banner.jpg" alt="">
+    </div>
+    <div class="shortcut">
+        <!-- 未登录状态  -->
+        <div class="login_out">
+            <a href="login.html">登录</a>
+            <a href="register.html">注册</a>
         </div>
-        <div class="shortcut">
-            <!-- 未登录状态  -->
-            <div class="login_out">
-                <a href="login.html">登录</a>
-                <a href="register.html">注册</a>
-            </div>
-            <!-- 登录状态  -->
-            <div class="login">
-            	
-                <span id="uname"></span>
-                <a href="myfavorite.html" class="collection">我的收藏</a>
-                <a href="javascript:location.href='user/exit';">退出</a>
-            </div>
+        <!-- 登录状态  -->
+        <div class="login">
+
+            <span id="uname"></span>
+            <a href="myfavorite.html" class="collection">我的收藏</a>
+            <a href="javascript:location.href='user/exit';">退出</a>
         </div>
-        <div class="header_wrap">
-            <div class="topbar">
-                <div class="logo">
-                    <a href="/"><img src="images/logo.jpg" alt=""></a>
+    </div>
+    <div class="header_wrap">
+        <div class="topbar">
+            <div class="logo">
+                <a href="/"><img src="images/logo.jpg" alt=""></a>
+            </div>
+            <div class="search">
+                <input name="" id="search_input" type="text" placeholder="请输入路线名称" class="search_input" autocomplete="off">
+                <a href="javascript:;" class="search-button" id="search_button">搜索</a>
+            </div>
+            <div class="hottel">
+                <div class="hot_pic">
+                    <img src="images/hot_tel.jpg" alt="">
                 </div>
-                <div class="search">
-                    <input name="" type="text" placeholder="请输入路线名称" class="search_input" autocomplete="off">
-                    <a href="javascript:;" class="search-button">搜索</a>
-                </div>
-                <div class="hottel">
-                    <div class="hot_pic">
-                        <img src="images/hot_tel.jpg" alt="">
-                    </div>
-                    <div class="hot_tel">
-                        <p class="hot_time">客服热线(9:00-6:00)</p>
-                        <p class="hot_num">400-618-9090</p>
-                    </div>
+                <div class="hot_tel">
+                    <p class="hot_time">客服热线(9:00-6:00)</p>
+                    <p class="hot_num">400-618-9090</p>
                 </div>
             </div>
         </div>
-    </header>
-    <!-- 头部 end -->
-     <!-- 首页导航 -->
-    <div class="navitem">
-        <ul id="category" class="nav">
-            <!--            需要发送ajax请求从后台拿到数据，再填充前端-->
+    </div>
+</header>
+<!-- 头部 end -->
+ <!-- 首页导航 -->
+<div class="navitem">
+    <ul id="category" class="nav">
+        <!--            需要发送ajax请求从后台拿到数据，再填充前端-->
 <!--            <li class="nav-active"><a href="index.html">首页</a></li>-->
 <!--            <li><a href="route_list.html">门票</a></li>-->
 <!--            <li><a href="route_list.html">酒店</a></li>-->
@@ -87,6 +96,6 @@
 <!--            <li><a href="route_list.html">抱团定制</a></li>-->
 <!--            <li><a href="route_list.html">全球自由行</a></li>-->
 <!--            <li><a href="favoriterank.html">收藏排行榜</a></li>-->
-        </ul>
-    </div>
+    </ul>
+</div>
     

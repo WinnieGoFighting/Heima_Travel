@@ -28,8 +28,13 @@ public class RouteServlet extends BaseServlet {
         String pageSize_str = request.getParameter("pageSize");
         String cid_str = request.getParameter("cid");
 
+        //增加一个参数，rname
+        //tomcat7 get 请求中文乱码问题，需要解决
+        String rname = request.getParameter("rname");
+        rname = new String(rname.getBytes("iso-8859-1"),"utf-8");
+
         int cid = 0;
-        if (cid_str != null && cid_str.length()>0) {
+        if (cid_str != null && cid_str.length()>0&&!"null".equals(cid_str)) {
             cid = Integer.parseInt(cid_str);
         }
 
@@ -45,10 +50,29 @@ public class RouteServlet extends BaseServlet {
         }
 
         //调用service返回PageBean
-        PageBean<Route> pb = service.pageQuery(cid,currentPage,pageSize);
+        PageBean<Route> pb = service.pageQuery(cid,currentPage,pageSize,rname);
 
         //序列化PageBean返回给前端
         writeValue(pb,response);
+    }
+
+    /**
+     * 根据id查询旅游线路的详细信息
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void findOne(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //1.接受rid
+        String rid_str = request.getParameter("rid");
+        int rid = 0;
+        if (rid_str!=null&&rid_str.length()!=0)
+            rid = Integer.parseInt(rid_str);
+        //2.调用service查询route对象
+        Route route = service.findOne(rid);
+        //3.转为json写回客户端
+        writeValue(route,response);
     }
 
 }
