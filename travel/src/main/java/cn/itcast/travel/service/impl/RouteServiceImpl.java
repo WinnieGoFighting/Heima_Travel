@@ -1,8 +1,10 @@
 package cn.itcast.travel.service.impl;
 
+import cn.itcast.travel.dao.FavoriteDao;
 import cn.itcast.travel.dao.RouteDao;
 import cn.itcast.travel.dao.RouteImgDao;
 import cn.itcast.travel.dao.SellerDao;
+import cn.itcast.travel.dao.impl.FavoriteDaoImpl;
 import cn.itcast.travel.dao.impl.RouteDaoImpl;
 import cn.itcast.travel.dao.impl.RouteImgDaoImpl;
 import cn.itcast.travel.dao.impl.SellerDaoImpl;
@@ -19,6 +21,7 @@ public class RouteServiceImpl implements RouteService {
     private RouteDao routeDao = new RouteDaoImpl();
     private RouteImgDao routeImgDao  = new RouteImgDaoImpl();
     private SellerDao sellerDao = new SellerDaoImpl();
+    private FavoriteDao favoriteDao = new FavoriteDaoImpl();
 
     /**
      * 通过查询数据库组装PageBean对象并返回
@@ -57,7 +60,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     /**
-     * 根据rid查询route的详细信息(结合三张表route,img, seller得到)
+     * 根据rid查询route的详细信息(结合三张表route,img, seller，favorite得到)
      * @param rid
      * @return
      */
@@ -72,6 +75,7 @@ public class RouteServiceImpl implements RouteService {
         //根据rid查询卖家信息并设置回route类
         Seller seller = sellerDao.findById(route.getSid());
         route.setSeller(seller);
+
         return route;
     }
 }

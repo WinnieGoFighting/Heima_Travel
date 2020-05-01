@@ -6,4 +6,8 @@ import java.util.List;
 
 public interface CategoryService {
     public List<Category> findAll();
+
+    interface FavoriteService {
+        public boolean isFavorite(int rid, int uid);
+    }
 }

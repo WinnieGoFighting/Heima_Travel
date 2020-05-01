@@ -68,10 +68,10 @@
                 <div class="pros_price">
                     <p class="price"><strong id="price">¥2699.00</strong><span>起</span></p>
                     <p class="collect">
-                        <a class="btn"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
+                        <a class="btn" id="favorite" onclick="javascript:addFavorite()"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
 
-                        <a  class="btn already" disabled="disabled"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
-                        <span>已收藏100次</span>
+<!--                        <a  class="btn already" disabled="disabled"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>-->
+                        <span id="favoriteCount">已收藏100次</span>
                     </p>
                 </div>        
             </div>
@@ -115,96 +115,139 @@
     // $(document).ready(function() {
     //     goImg();
     // });
-    function presentImg() {
-        //焦点图效果
-        //点击图片切换图片
-        $('.little_img').on('mousemove', function() {
-            $('.little_img').removeClass('cur_img');
-            var big_pic = $(this).data('bigpic');
-            $('.big_img').attr('src', big_pic);
-            $(this).addClass('cur_img');
-        });
-        //上下切换
-        var picindex = 0;
-        var nextindex = 4;
-        $('.down_img').on('click',function(){
-            var num = $('.little_img').length;
-            if((nextindex + 1) <= num){
-                $('.little_img:eq('+picindex+')').hide();
-                $('.little_img:eq('+nextindex+')').show();
-                picindex = picindex + 1;
-                nextindex = nextindex + 1;
-            }
-        });
-        $('.up_img').on('click',function(){
-            var num = $('.little_img').length;
-            if(picindex > 0){
-                $('.little_img:eq('+(nextindex-1)+')').hide();
-                $('.little_img:eq('+(picindex-1)+')').show();
-                picindex = picindex - 1;
-                nextindex = nextindex - 1;
-            }
-        });
-    }
+        function presentImg() {
+            //焦点图效果
+            //点击图片切换图片
+            $('.little_img').on('mousemove', function() {
+                $('.little_img').removeClass('cur_img');
+                var big_pic = $(this).data('bigpic');
+                $('.big_img').attr('src', big_pic);
+                $(this).addClass('cur_img');
+            });
+            //上下切换
+            var picindex = 0;
+            var nextindex = 4;
+            $('.down_img').on('click',function(){
+                var num = $('.little_img').length;
+                if((nextindex + 1) <= num){
+                    $('.little_img:eq('+picindex+')').hide();
+                    $('.little_img:eq('+nextindex+')').show();
+                    picindex = picindex + 1;
+                    nextindex = nextindex + 1;
+                }
+            });
+            $('.up_img').on('click',function(){
+                var num = $('.little_img').length;
+                if(picindex > 0){
+                    $('.little_img:eq('+(nextindex-1)+')').hide();
+                    $('.little_img:eq('+(picindex-1)+')').show();
+                    picindex = picindex - 1;
+                    nextindex = nextindex - 1;
+                }
+            });
+        }
 
     //自动轮播方法
-    function auto_play() {
-        var cur_index = $('.prosum_left dd').find('a.cur_img').index();
-        cur_index = cur_index - 1;
-        var num = $('.little_img').length;
-        var max_index = 3;
-        if ((num - 1) < 3) {
-            max_index = num - 1;
+        function auto_play() {
+            var cur_index = $('.prosum_left dd').find('a.cur_img').index();
+            cur_index = cur_index - 1;
+            var num = $('.little_img').length;
+            var max_index = 3;
+            if ((num - 1) < 3) {
+                max_index = num - 1;
+            }
+            if (cur_index < max_index) {
+                var next_index = cur_index + 1;
+                var big_pic = $('.little_img:eq(' + next_index + ')').data('bigpic');
+                $('.little_img').removeClass('cur_img');
+                $('.little_img:eq(' + next_index + ')').addClass('cur_img');
+                $('.big_img').attr('src', big_pic);
+            } else {
+                var big_pic = $('.little_img:eq(0)').data('bigpic');
+                $('.little_img').removeClass('cur_img');
+                $('.little_img:eq(0)').addClass('cur_img');
+                $('.big_img').attr('src', big_pic);
+            }
         }
-        if (cur_index < max_index) {
-            var next_index = cur_index + 1;
-            var big_pic = $('.little_img:eq(' + next_index + ')').data('bigpic');
-            $('.little_img').removeClass('cur_img');
-            $('.little_img:eq(' + next_index + ')').addClass('cur_img');
-            $('.big_img').attr('src', big_pic);
-        } else {
-            var big_pic = $('.little_img:eq(0)').data('bigpic');
-            $('.little_img').removeClass('cur_img');
-            $('.little_img:eq(0)').addClass('cur_img');
-            $('.big_img').attr('src', big_pic);
-        }
-    }
-    $(function() {
-        //1.获取参数
-        var rid = getParameter("rid");
-        //2. 发送ajax请求 route/findOne
-        $.get("route/findOne",{rid:rid},function(route) {
-            //解析route,填充页面
-            $("#rname").html(route.rname);
-            $("#route_intro").html(route.routeIntroduce);
-            $("#price").html(route.price);
-            $("#sname").html(route.seller.sname);
-            $("#sphone").html(route.seller.consphone);
-            $("#saddress").html(route.seller.address);
+        $(function() {
+            //1.获取参数
+            var rid = getParameter("rid");
+            //2. 发送ajax请求 route/findOne
+            $.get("route/findOne",{rid:rid},function(route) {
+                //解析route,填充页面
+                $("#rname").html(route.rname);
+                $("#route_intro").html(route.routeIntroduce);
+                $("#price").html(route.price);
+                $("#sname").html(route.seller.sname);
+                $("#sphone").html(route.seller.consphone);
+                $("#saddress").html(route.seller.address);
+                $("#favoriteCount").html("已收藏"+route.count+"次");
 
-         var ddstr = '<a class="up_img up_img_disable"></a>';
-            //遍历routeImgList
-            for(var i = 0; i<route.routeImgList.length;i++) {
-                var tmp;
-                //右边的轮播最多只显示四张图片
-                if (i>=4) {
-                    tmp = '<a title="" class="little_img" data-bigpic="'+route.routeImgList[i].bigPic+'" style="display:none;">\n' +
-                    '<img src="'+route.routeImgList[i].smallPic+'">\n' +
-                    '</a>';
-                }
-                else {
-                    tmp = '</a>\n' +
-                        '<a title="" class="little_img" data-bigpic="'+route.routeImgList[i].bigPic+'" >\n' +
+             var ddstr = '<a class="up_img up_img_disable"></a>';
+                //遍历routeImgList
+                for(var i = 0; i<route.routeImgList.length;i++) {
+                    var tmp;
+                    //右边的轮播最多只显示四张图片
+                    if (i>=4) {
+                        tmp = '<a title="" class="little_img" data-bigpic="'+route.routeImgList[i].bigPic+'" style="display:none;">\n' +
                         '<img src="'+route.routeImgList[i].smallPic+'">\n' +
-                        '</a>'
-                }
-                ddstr+=tmp;
-        }
-            ddstr += '<a class="down_img down_img_disable" style="margin-bottom: 0;"></a>';
-            $("#dd").html(ddstr);
-            presentImg();
+                        '</a>';
+                    }
+                    else {
+                        tmp = '</a>\n' +
+                            '<a title="" class="little_img" data-bigpic="'+route.routeImgList[i].bigPic+'" >\n' +
+                            '<img src="'+route.routeImgList[i].smallPic+'">\n' +
+                            '</a>'
+                    }
+                    ddstr+=tmp;
+            }
+                ddstr += '<a class="down_img down_img_disable" style="margin-bottom: 0;"></a>';
+                $("#dd").html(ddstr);
+                presentImg();
+            });
+        });
+
+    //用来实现收藏按钮的展示
+    $(function(){
+        //发送请求，判断用户是否收藏过该线路
+        var rid = getParameter("rid");
+        $.get("route/isFavorite",{rid:rid},function(flag) {
+            if (flag) {
+                //用户已经收藏
+                //设置收藏样式的按钮
+            //<a  class="btn already" disabled="disabled">
+                $("#favorite").addClass("btn already");
+                $("#favorite").attr("disabled","disabled");
+
+                //按钮灰了以后无法再点击，所以要在这里删除按钮的点击事件
+                $("favorite").removeAttr("onclick");
+            }
+            else {
+
+            }
         });
     });
+
+    //点击收藏按钮触发的按钮
+    function addFavorite() {
+        //发送ajax请求判断用户是否登录
+        $.get("user/find",{},function(user) {
+            if (user) {
+                var rid = getParameter("rid");
+                $.get("route/addFavorite",{rid:rid},function(){
+                    //增加用户体验，手动刷新页面
+                    location.reload();
+                    //还有一种方法：
+                    //点完按钮，再次发送异步请求，更新页面上的收藏次数，并且更新按钮样式
+                });
+            }
+            else {
+                alert("尚未登录，请登录");
+                location.href="http://localhost:8888/travel/login.html";
+            }
+        });
+    }
+
     </script>
 </body>
 </html>
